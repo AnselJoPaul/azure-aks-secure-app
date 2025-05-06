@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/issuer: letsencrypt-prod  # Reference to the issuer you created
+spec:
+  rules:
+  - host: my-app.example.com  # Replace with your app's domain name
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-app-service  # Replace with your application's service name
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - my-app.example.com  # Replace with your app's domain name
+    secretName: my-app-tls  # Secret to store the TLS certificate
